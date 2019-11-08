@@ -2,23 +2,37 @@
 
 int mx_quicksort(char **arr, int left, int right) {
     int count = 0;
-    char pivot = arr[(right - left) / 2];
-    int i, j;
-    for (i = left, j = rigth - 1; ; i++, j--) {
-        while (mx_strlen(arr[i]) < mx_strlen(pivot)) {
-            i++;
-        }
-        while (mx_strlen(arr[j]) > mx_strlen(pivot)) {
-            j--;
-        }
-        if (i >= j) {
-            break;
-        }
-        mx_swap_str(arr[i], arr[j]);
-        count++;
+    if (arr == NULL || *arr == NULL) {
+        return -1;
     }
-    mx_quicksort(arr, left, pivot - 1);
-    mx_quicksort(arr, pivot + 1, right);
+    if (left < right) {
+        int low = left;
+        int high = right;
+        int pivot = (high + low) / 2;
+        while (low <= high) {
+            while (mx_strlen(arr[low]) < mx_strlen(arr[pivot])) {
+                low++;
+            }
+            while (mx_strlen(arr[high]) > mx_strlen(arr[pivot])) {
+                high--;
+            }
+            if(low <= high) {
+                if(mx_strlen(arr[low]) > mx_strlen(arr[high])) {
+                    count++;
+                    mx_swap_str(&arr[low], &arr[high]);
+                }
+                else if(mx_strlen(arr[low]) == mx_strlen(arr[high])) {
+                    if (mx_strcmp(arr[low], arr[high]) > 0)  {
+                        count++;
+                        mx_swap_str(&arr[low], &arr[high]);
+                    }
+                }
+                low++;
+                high--;
+            }
+        }
+        count += mx_quicksort(arr, left, high);
+        count += mx_quicksort(arr, low, right);
     }
     return count;
 }
